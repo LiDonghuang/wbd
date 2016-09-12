@@ -88,3 +88,12 @@ class Angle():
             self.degrees -= 360
         while self.degrees < 0:            
             self.degrees += 360
+            
+a = Angle()
+a.setDegrees(-299.5)
+b = Angle()
+b.setDegreesAndMinutes("60d20")
+print a.compare(b)
+a.subtract(b)
+print a.getString()
+print a.getDegrees()
