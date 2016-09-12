@@ -5,7 +5,6 @@
 class Angle():
     def __init__(self):
         self.degrees = 0
-        self.minutes = 0
         #self.angle = ...       set to 0 degrees 0 minutes
     
     def setDegrees(self, *degrees):
@@ -44,60 +43,59 @@ class Angle():
                 raise TypeError("ValueError: Angle.setDegreesAndMinutes() only takes Integer or Float 'Minutes' input")
             else:
                 self.degrees = float(dm[0])
-                self.minutes = float(dm[1])
+                minutes = float(dm[1])
+                if minutes > 60:
+                    minutes -= 60
+                    self.degrees += 1
+                elif minutes < 0:
+                    minutes += 60
+                    self.degrees -= 1            
+                self.degrees += minutes / 60
                 self.__formatAngle()
     
     def add(self, angle):
+        # add another angle to current angle, retain the value
         self.degrees += angle.degrees
-        self.minutes += angle.minutes
         self.__formatAngle()
     
     def subtract(self, angle):
+        # subtract another angle from current angle, retain the value
         self.degrees -= angle.degrees
-        self.minutes -= angle.minutes
         self.__formatAngle()
     
     def compare(self, angle):
+        # compare another angle to current angle, 1 if current is greater, 
+        # 0 for equal, -1 if current is smaller
         if not isinstance(angle, Angle):
             raise TypeError("ValueError: Angle.compare() only takes Angle type 'angle' input")
         else:
             if self.degrees < angle.degrees:
                 return -1
             elif self.degrees == angle.degrees:
-                if self.minutes < angle.minutes:
-                    return -1
-                elif self.minutes == angle.minutes:
-                    return 0
-                else:
-                    return 1
+                return 0
             else: 
                 return 1           
     
     def getString(self):
-        return str(self.degrees)+"d"+str(self.minutes)
+        return str(int(self.degrees))+"d"+str(60*(self.degrees-int(self.degrees)))
     
     def getDegrees(self):
-        pass
+        return float(self.degrees)
     
     def __formatAngle(self):
     # this method is for formating the degrees value: 0~360d, 0~60m
-    # to be improved
-        if self.minutes > 60:
-            self.minutes -= 60
-            self.degrees += 1
-        elif self.minutes < 0:
-            self.minutes += 60
-            self.minutes -= 1    
-        if self.degrees > 360:
+        while self.degrees > 360:
             self.degrees -= 360
-        elif self.degrees < 0:
+        while self.degrees < 0:            
             self.degrees += 360
-
       
-a = Angle()
-a.setDegrees(60)
-b = Angle()
-b.setDegreesAndMinutes("60d0")
-print a.compare(b)
-a.subtract(b)
-print a.getString()
+
+#TEST CODES
+# a = Angle()
+# a.setDegrees(-299.5)
+# b = Angle()
+# b.setDegreesAndMinutes("60d20")
+# print a.compare(b)
+# a.subtract(b)
+# print a.getString()
+# print a.getDegrees()
